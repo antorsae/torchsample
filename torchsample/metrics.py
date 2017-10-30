@@ -21,7 +21,11 @@ class MetricContainer(object):
 
     def reset(self):
         for metric in self.metrics:
-            metric.reset()
+            if isinstance(metric, list):
+                for _metric in metric:
+                    _metric.reset()
+            else:
+                metric.reset()
 
     def __call__(self, output_batch, target_batch):
         logs = {}
@@ -142,5 +146,22 @@ class ProjectionAntiCorrelation(Metric):
         self.total_count += covar_mat.size(0)*(covar_mat.size(1) - 1)
         return self.anticorr_sum / self.total_count
 
+class MeanAverageError(Metric):
 
+    def __init__(self, top_k=1):
+        self.total_error = 0
+        self.total_count = 0
+        self.mae = 0
+
+        self._name = 'mae_metric'
+
+    def reset(self):
+        self.total_error = 0
+        self.total_count = 0
+        self.accuracy = 0
+
+    def __call__(self, y_pred, y_true):
+        self.total_error += th.abs(y_pred - y_true)
+        self.total_count += len(y_pred)
+        return self.total_error / self.total_count
 

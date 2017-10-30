@@ -180,19 +180,28 @@ class History(Callback):
 
     def on_train_begin(self, logs=None):
         self.epoch_metrics = {
-            'loss': []
+            'loss': [],
+            # TODO FIX THIS
+            'loss_0': [],
+            'loss_1': [],
         }
         self.batch_size = logs['batch_size']
         self.has_val_data = logs['has_val_data']
         self.has_regularizers = logs['has_regularizers']
         if self.has_val_data:
             self.epoch_metrics['val_loss'] = []
+            # TODO FIX THIS
+            self.epoch_metrics['val_loss_0'] = []
+            self.epoch_metrics['val_loss_1'] = []
         if self.has_regularizers:
             self.epoch_metrics['reg_loss'] = []
 
     def on_epoch_begin(self, epoch, logs=None):
         self.batch_metrics = {
-            'loss': 0.
+            'loss': 0.,
+            # TODO FIX THIS
+            'loss_0': 0.,
+            'loss_1': 0.,
         }
         if self.has_regularizers:
             self.batch_metrics['reg_loss'] = 0.
